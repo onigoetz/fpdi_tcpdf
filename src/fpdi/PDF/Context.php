@@ -16,9 +16,9 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //
-namespace fpdi;
+namespace fpdi\PDF;
     
-class pdf_context {
+class Context {
 
     /**
      * Modi

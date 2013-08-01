@@ -1,7 +1,7 @@
 fpdi
 ====
 
-Unofficial PSR-0 compliant version of the FPDI library
+Unofficial PSR-0 compliant version of the FPDI library for TCPDF
 
 
 This is version 1.4.2 of FPDI (and version 1.2 of FPDF_TPL) with some minor changes:
@@ -14,12 +14,10 @@ This is version 1.4.2 of FPDI (and version 1.2 of FPDF_TPL) with some minor chan
 
 * constructors are renamed *__construct* instead of class name
 
-* support for TCPDF via *fpdi2tcpdf_bridge* is removed (incompatible with PSR-0)
 
+## Installning with composer
 
-## Installning with composor
-
-The package exists in the packagist repository as *itbz/fpdi*
+The package exists in the packagist repository as `onigoetz/fpdi_tcpdf`
 
 
 ## License

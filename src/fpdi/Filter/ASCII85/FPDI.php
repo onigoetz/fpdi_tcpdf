@@ -16,17 +16,17 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //
-namespace fpdi;
+namespace fpdi\Filter\ASCII85;
 
-class FilterASCII85_FPDI extends FilterASCII85 {
+class FPDI extends \fpdi\Filter\ASCII85 {
 
-    var $fpdi;
+    protected $fpdi;
     
-    function FilterASCII85_FPDI(&$fpdi) {
-        $this->fpdi =& $fpdi;
+    public function __construct($fpdi) {
+        $this->fpdi = $fpdi;
     }
 
-    function error($msg) {
+    public function error($msg) {
         $this->fpdi->error($msg);
     }
 }

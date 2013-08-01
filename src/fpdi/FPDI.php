@@ -26,7 +26,7 @@ if (class_exists('TCPDF', false)) {
 }
 
 
-class FPDI extends FPDF_TPL {
+class FPDI extends FPDF\TPL {
     /**
      * Actual filename
      * @var string
@@ -95,10 +95,10 @@ class FPDI extends FPDF_TPL {
      * Returns a PDF parser object
      *
      * @param string $filename
-     * @return fpdi_pdf_parser
+     * @return PDF\Parser\FPDI
      */
     function _getPdfParser($filename) {
-    	return new fpdi_pdf_parser($filename, $this);
+    	return new PDF\Parser\FPDI($filename, $this);
     }
     
     /**

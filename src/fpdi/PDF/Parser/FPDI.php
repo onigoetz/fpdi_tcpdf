@@ -17,9 +17,11 @@
 //  limitations under the License.
 //
 
-namespace fpdi;
+namespace fpdi\PDF\Parser;
 
-class fpdi_pdf_parser extends pdf_parser {
+use \fpdi\PDF\Context;
+
+class FPDI extends \fpdi\PDF\Parser {
 
     /**
      * Pages
@@ -66,8 +68,8 @@ class fpdi_pdf_parser extends pdf_parser {
      * @param string $filename  Source-Filename
      * @param object $fpdi      Object of type fpdi
      */
-    function __construct($filename, &$fpdi) {
-        $this->fpdi =& $fpdi;
+    function __construct($filename, $fpdi) {
+        $this->fpdi = $fpdi;
 		
         parent::__construct($filename);
 
@@ -245,13 +247,11 @@ class fpdi_pdf_parser extends pdf_parser {
                     }
                 break;
                 case '/LZWDecode':
-                    #include_once('filters/FilterLZW_FPDI.php');
-                    $decoder = new FilterLZW_FPDI($this->fpdi);
+                    $decoder = new Filter\LZW\FPDI($this->fpdi);
                     $stream = $decoder->decode($stream);
                     break;
                 case '/ASCII85Decode':
-                    #include_once('filters/FilterASCII85_FPDI.php');
-                    $decoder = new FilterASCII85_FPDI($this->fpdi);
+                    $decoder = new Filter\ASCII85\FPDI($this->fpdi);
                     $stream = $decoder->decode($stream);
                     break;
                 case null:
@@ -365,11 +365,11 @@ class fpdi_pdf_parser extends pdf_parser {
     /**
      * Read all /Page(es)
      *
-     * @param object pdf_context
+     * @param Context $c context
      * @param array /Pages
      * @param array the result-array
      */
-    function read_pages(&$c, &$pages, &$result) {
+    function read_pages(Context $c, &$pages, &$result) {
         // Get the kids dictionary
     	$_kids = $this->pdf_resolve_object ($c, $pages[1][1]['/Kids']);
         

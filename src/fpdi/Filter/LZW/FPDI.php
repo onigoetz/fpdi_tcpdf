@@ -16,17 +16,17 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //
-namespace fpdi;
+namespace fpdi\Filter\LZW;
 
-class FilterLZW_FPDI extends FilterLZW {
+class FPDI extends \fpdi\Filter\LZW {
 
-    var $fpdi;
+    protected $fpdi;
 
-    function FilterLZW_FPDI(&$fpdi) {
-        $this->fpdi =& $fpdi;
+    public function __construct($fpdi) {
+        $this->fpdi = $fpdi;
     }
     
-    function error($msg) {
+    public function error($msg) {
         $this->fpdi->error($msg);
     }
 }

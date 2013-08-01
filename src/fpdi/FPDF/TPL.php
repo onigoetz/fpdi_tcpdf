@@ -16,10 +16,10 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //
-namespace fpdi;
-use fpdf\FPDF;
+namespace fpdi\FPDF;
+use fpdi\FPDF;
 
-class FPDF_TPL extends FPDF {
+class TPL extends FPDF {
     /**
      * Array of Tpl-Data
      * @var array

@@ -16,14 +16,14 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //
-namespace fpdi;
+namespace fpdi\Filter;
 
 define('ORD_z',ord('z'));
 define('ORD_exclmark', ord('!'));
 define('ORD_u', ord('u'));
 define('ORD_tilde', ord('~'));
 
-class FilterASCII85 {
+class ASCII85 {
     
     function error($msg) {
         die($msg);

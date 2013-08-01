@@ -16,7 +16,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //
-namespace fpdi;
+namespace fpdi\PDF;
 
 define ('PDF_TYPE_NULL', 0);
 define ('PDF_TYPE_NUMERIC', 1);
@@ -32,7 +32,7 @@ define ('PDF_TYPE_STREAM', 10);
 define ('PDF_TYPE_BOOLEAN', 11);
 define ('PDF_TYPE_REAL', 12);
     
-class pdf_parser {
+class Parser {
     
     /**
      * Filename
@@ -48,7 +48,7 @@ class pdf_parser {
     
     /**
      * PDF Context
-     * @var object pdf_context-Instance
+     * @var Context
      */
     var $c;
     
@@ -92,7 +92,7 @@ class pdf_parser {
 
         $this->getPDFVersion();
 
-        $this->c = new pdf_context($this->f);
+        $this->c = new Context($this->f);
         
         // Read xref-Data
         $this->xref = array();
@@ -205,7 +205,7 @@ class pdf_parser {
 
         if ($xrefPos === false) {
             fseek($this->f, $offset);
-            $c = new pdf_context($this->f);
+            $c = new Context($this->f);
             $xrefStreamObjDec = $this->pdf_read_value($c);
             
             if (is_array($xrefStreamObjDec) && isset($xrefStreamObjDec[0]) && $xrefStreamObjDec[0] == PDF_TYPE_OBJDEC) {
@@ -285,7 +285,7 @@ class pdf_parser {
         
         fseek($this->f, $o_pos + $trailerPos + 7);
         
-        $c = new pdf_context($this->f);
+        $c = new Context($this->f);
         $trailer = $this->pdf_read_value($c);
         
         $c = null;
@@ -308,11 +308,11 @@ class pdf_parser {
     /**
      * Reads an Value
      *
-     * @param object $c pdf_context
+     * @param Context $c context
      * @param string $token a Token
      * @return mixed
      */
-    function pdf_read_value(&$c, $token = null) {
+    function pdf_read_value(Context $c, $token = null) {
         if (is_null($token)) {
             $token = $this->pdf_read_token($c);
         }
@@ -436,7 +436,7 @@ class pdf_parser {
                     $e++;
                 
                 if ($this->actual_obj[1][1]['/Length'][0] == PDF_TYPE_OBJREF) {
-                    $tmp_c = new pdf_context($this->f);
+                    $tmp_c = new Context($this->f);
                     $tmp_length = $this->pdf_resolve_object($tmp_c, $this->actual_obj[1][1]['/Length']);
                     $length = $tmp_length[1][1];
                 } else {
@@ -500,11 +500,11 @@ class pdf_parser {
     /**
      * Resolve an object
      *
-     * @param object $c pdf_context
+     * @param Context $c context
      * @param array $obj_spec The object-data
      * @param boolean $encapsulate Must set to true, cause the parsing and fpdi use this method only without this para
      */
-    function pdf_resolve_object(&$c, $obj_spec, $encapsulate = true) {
+    function pdf_resolve_object(Context $c, $obj_spec, $encapsulate = true) {
         // Exit if we get invalid data
         if (!is_array($obj_spec)) {
             $ret = false;
@@ -584,15 +584,13 @@ class pdf_parser {
         }
     }
 
-    
-    
     /**
      * Reads a token from the file
      *
-     * @param object $c pdf_context
+     * @param Context $c context
      * @return mixed
      */
-    function pdf_read_token(&$c)
+    function pdf_read_token(Context $c)
     {
         // If there is a token available
         // on the stack, pop it out and
