@@ -1,11 +1,11 @@
 {
-    "name": "itbz/fpdi",
-    "description": "Unofficial PSR-0 compliant version of the FPDI library",
+    "name": "onigoetz/fpdi_tcpdf",
+    "description": "Unofficial PSR-0 compliant version of the FPDI library for TCPDF",
     "type": "library",
     "license": "Apache-2.0",
     "require": {
         "php": ">=5.3.0",
-        "itbz/fpdf": "1.7.*"
+        "tecnick.com/tcpdf": "6.*"
     },
     "autoload": {
         "psr-0": {
