@@ -75,7 +75,7 @@ class TPL extends FPDF {
      * @param int $h The height given in user-unit
      * @return int The ID of new created Template
      */
-    function beginTemplate($x = null, $y = null, $w = null, $h = null) {
+    public function beginTemplate($x = null, $y = null, $w = null, $h = null) {
         if (is_subclass_of($this, 'TCPDF')) {
             $this->Error('This method is only usable with FPDF. Use TCPDF methods startTemplate() instead.');
             return;
@@ -133,7 +133,7 @@ class TPL extends FPDF {
      *
      * @return mixed If a template is opened, the ID is returned. If not a false is returned.
      */
-    function endTemplate() {
+    public function endTemplate() {
         if (is_subclass_of($this, 'TCPDF')) {
             $args = func_get_args();
             return call_user_func_array(array($this, 'TCPDF::endTemplate'), $args);
@@ -173,7 +173,7 @@ class TPL extends FPDF {
      * @param int $_h The new height of the template
      * @retrun array The height and width of the template
      */
-    function useTemplate($tplidx, $_x = null, $_y = null, $_w = 0, $_h = 0) {
+    public function useTemplate($tplidx, $_x = null, $_y = null, $_w = 0, $_h = 0) {
         if ($this->page <= 0)
             $this->error('You have to add a page first!');
 
@@ -237,7 +237,7 @@ class TPL extends FPDF {
      * @param int $_h The height of the template
      * @return array The height and width of the template
      */
-    function getTemplateSize($tplidx, $_w = 0, $_h = 0) {
+    public function getTemplateSize($tplidx, $_w = 0, $_h = 0) {
         if (!$this->tpls[$tplidx])
             return false;
 
@@ -261,7 +261,7 @@ class TPL extends FPDF {
     /**
      * See FPDF/TCPDF-Documentation ;-)
      */
-    public function SetFont($family, $style = '', $size = 0) {
+    public function SetFont($family, $style='', $size=null, $fontfile='', $subset='default', $out=true) {
         if (is_subclass_of($this, 'TCPDF')) {
             $args = func_get_args();
             return call_user_func_array(array($this, 'TCPDF::SetFont'), $args);
@@ -273,7 +273,7 @@ class TPL extends FPDF {
         if ($this->_intpl)
             $this->FontFamily = '';
 
-        parent::SetFont($family, $style, $size);
+        parent::SetFont($family, $style, $size, $fontfile, $subset, $out);
 
         $fontkey = $this->FontFamily . $this->FontStyle;
 
@@ -287,13 +287,13 @@ class TPL extends FPDF {
     /**
      * See FPDF/TCPDF-Documentation ;-)
      */
-    function Image($file, $x = null, $y = null, $w = 0, $h = 0, $type = '', $link = '') {
+    function Image($file, $x='', $y='', $w=0, $h=0, $type='', $link='', $align='', $resize=false, $dpi=300, $palign='', $ismask=false, $imgmask=false, $border=0, $fitbox=false, $hidden=false, $fitonpage=false, $alt=false, $altimgs=array()) {
         if (is_subclass_of($this, 'TCPDF')) {
             $args = func_get_args();
             return call_user_func_array(array($this, 'TCPDF::Image'), $args);
         }
 
-        $ret = parent::Image($file, $x, $y, $w, $h, $type, $link);
+        $ret = parent::Image($file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, $fitonpage, $alt, $altimgs);
         if ($this->_intpl) {
             $this->_res['tpl'][$this->tpl]['images'][$file] =& $this->images[$file];
         } else {
@@ -308,7 +308,7 @@ class TPL extends FPDF {
      *
      * AddPage is not available when you're "in" a template.
      */
-    function AddPage($orientation = '', $format = '') {
+    function AddPage($orientation='', $format='', $keepmargins=false, $tocpage=false) {
         if (is_subclass_of($this, 'TCPDF')) {
             $args = func_get_args();
             return call_user_func_array(array($this, 'TCPDF::AddPage'), $args);
@@ -317,13 +317,13 @@ class TPL extends FPDF {
         if ($this->_intpl)
             $this->Error('Adding pages in templates isn\'t possible!');
 
-        parent::AddPage($orientation, $format);
+        parent::AddPage($orientation, $format, $keepmargins, $tocpage);
     }
 
     /**
      * Preserve adding Links in Templates ...won't work
      */
-    function Link($x, $y, $w, $h, $link) {
+    function Link($x, $y, $w, $h, $link, $spaces=0) {
         if (is_subclass_of($this, 'TCPDF')) {
             $args = func_get_args();
             return call_user_func_array(array($this, 'TCPDF::Link'), $args);
@@ -332,7 +332,7 @@ class TPL extends FPDF {
         if ($this->_intpl)
             $this->Error('Using links in templates aren\'t possible!');
 
-        parent::Link($x, $y, $w, $h, $link);
+        parent::Link($x, $y, $w, $h, $link, $spaces);
     }
 
     function AddLink() {
