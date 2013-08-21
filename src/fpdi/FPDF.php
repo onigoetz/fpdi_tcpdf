@@ -1,8 +1,8 @@
 <?php
 //
-//  FPDI - Version 1.4.2
+//  FPDI - Version 1.4.4
 //
-//    Copyright 2004-2011 Setasign - Jan Slabon
+//    Copyright 2004-2013 Setasign - Jan Slabon
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ class FPDF extends \TCPDF {
 				if ($this->encrypted) {
 				    $value[1] = $this->_unescape($value[1]);
                     $value[1] = $this->_encrypt_data($this->_current_obj_id, $value[1]);
-                 	$value[1] = $this->_escape($value[1]);
+                 	$value[1] = TCPDF_STATIC::_escape($value[1]);
                 }
     			break;
 

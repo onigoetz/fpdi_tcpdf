@@ -4,7 +4,8 @@ fpdi
 Unofficial PSR-0 compliant version of the FPDI library for TCPDF
 
 
-This is version 1.4.2 of FPDI (and version 1.2 of FPDF_TPL) with some minor changes:
+
+This is version [1.4.4 of FPDI](http://www.setasign.de/products/pdf-php-solutions/fpdi/downloads/) (and version 1.2.3 of FPDF_TPL) with some minor changes:
 
 * the library is namespaced in fpdi. To create instance use
 
@@ -15,7 +16,7 @@ This is version 1.4.2 of FPDI (and version 1.2 of FPDF_TPL) with some minor chan
 * constructors are renamed *__construct* instead of class name
 
 
-## Installning with composer
+## Installing with composer
 
 The package exists in the packagist repository as `onigoetz/fpdi_tcpdf`
 

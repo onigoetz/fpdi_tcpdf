@@ -1,8 +1,8 @@
 <?php
 //
-//  FPDI - Version 1.4.2
+//  FPDI - Version 1.4.4
 //
-//    Copyright 2004-2011 Setasign - Jan Slabon
+//    Copyright 2004-2013 Setasign - Jan Slabon
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -171,13 +171,13 @@ class Parser {
      * Find the xref-Table
      */
     function pdf_find_xref() {
-           $toRead = 1500;
+        $toRead = 1500;
                 
         $stat = fseek ($this->f, -$toRead, SEEK_END);
         if ($stat === -1) {
             fseek ($this->f, 0);
         }
-           $data = fread($this->f, $toRead);
+        $data = fread($this->f, $toRead);
         
         $pos = strlen($data) - strpos(strrev($data), strrev('startxref')); 
         $data = substr($data, $pos);
@@ -486,9 +486,9 @@ class Parser {
                         return array (PDF_TYPE_NUMERIC, (int)$token);
                     else 
                         return array (PDF_TYPE_REAL, (float)$token);
-                } else if ($token == 'true' || $token == 'false') {
+                } elseif ($token == 'true' || $token == 'false') {
                     return array (PDF_TYPE_BOOLEAN, $token == 'true');
-                } else if ($token == 'null') {
+                } elseif ($token == 'null') {
                    return array (PDF_TYPE_NULL);
                 } else {
                     // Just a token. Return it.
@@ -606,7 +606,7 @@ class Parser {
             if (!$c->ensure_content()) {
                 return false;
             }
-            $c->offset += strspn($c->buffer, " \n\r\t", $c->offset);
+            $c->offset += strspn($c->buffer, "\x20\x0A\x0C\x0D\x09\x00", $c->offset);
         } while ($c->offset >= $c->length - 1);
 
         // Get the first character in the stream
@@ -676,7 +676,7 @@ class Parser {
 
                     // Determine the length of the token
 
-                    $pos = strcspn($c->buffer, " %[]<>()\r\n\t/", $c->offset);
+                    $pos = strcspn($c->buffer, "\x20%[]<>()/\x0A\x0C\x0D\x09\x00", $c->offset);
                     
                     if ($c->offset + $pos <= $c->length - 1) {
                         break;
