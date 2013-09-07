@@ -130,10 +130,10 @@ class TPL extends FPDF {
         if ($this->CurrentFont) {
             $fontkey = $this->FontFamily . $this->FontStyle;
 		    $this->_res['tpl'][$this->tpl]['fonts'][$fontkey] =& $this->fonts[$fontkey];
-            
+
         	$this->_out(sprintf('BT /F%d %.2f Tf ET', $this->CurrentFont['i'], $this->FontSizePt));
         }
-        
+
         return $this->tpl;
     }
 
@@ -272,9 +272,9 @@ class TPL extends FPDF {
     }
 
     /**
-     * See FPDF/TCPDF-Documentation ;-)
+     * {@inheritdoc}
      */
-    public function SetFont($family, $style = '', $size = 0) {
+    public function SetFont($family, $style='', $size=null, $fontfile='', $subset='default', $out=true) {
         if (is_subclass_of($this, 'TCPDF')) {
         	$args = func_get_args();
         	return call_user_func_array(array($this, 'TCPDF::SetFont'), $args);
@@ -290,9 +290,9 @@ class TPL extends FPDF {
             $this->_res['page'][$this->page]['fonts'][$fontkey] =& $this->fonts[$fontkey];
         }
     }
-    
+
     /**
-     * See FPDF/TCPDF-Documentation ;-)
+     * {@inheritdoc}
      */
     public function Image(
 		$file, $x = '', $y = '', $w = 0, $h = 0, $type = '', $link = '', $align = '', $resize = false,
@@ -408,7 +408,7 @@ class TPL extends FPDF {
             		$this->_out('/F' . $font['i'] . ' ' . $font['n'] . ' 0 R');
             	$this->_out('>>');
             }
-        	if(isset($this->_res['tpl'][$tplidx]['images']) && count($this->_res['tpl'][$tplidx]['images']) || 
+        	if(isset($this->_res['tpl'][$tplidx]['images']) && count($this->_res['tpl'][$tplidx]['images']) ||
         	   isset($this->_res['tpl'][$tplidx]['tpls']) && count($this->_res['tpl'][$tplidx]['tpls']))
         	{
                 $this->_out('/XObject <<');
