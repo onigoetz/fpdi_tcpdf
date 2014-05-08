@@ -1,8 +1,8 @@
 <?php
 //
-//  FPDI - Version 1.4.4
+//  FPDI - Version 1.5.1
 //
-//    Copyright 2004-2013 Setasign - Jan Slabon
+//    Copyright 2004-2014 Setasign - Jan Slabon
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,74 +17,102 @@
 //  limitations under the License.
 //
 
-/**
- * This class is used as a bridge between TCPDF and FPDI
- * and will create the possibility to use both FPDF and TCPDF
- * via one FPDI version.
- *
- * We'll simply remap TCPDF to FPDF again.
- *
- * It'll be loaded and extended by FPDF_TPL.
- */
 namespace fpdi;
 
-class FPDF extends \TCPDF {
+use fpdi\PDF\Parser;
+use TCPDF;
+use TCPDF_STATIC;
 
-	protected function _getxobjectdict() {
+/**
+ * This class is used as a bridge between TCPDF and FPDI
+ */
+class FPDFBridge extends TCPDF {
+    /**
+     * Array of Tpl-Data
+     *
+     * @var array
+     */
+    protected $_tpls = array();
+
+    /**
+     * Name-prefix of Templates used in Resources-Dictionary
+     *
+     * @var string A String defining the Prefix used as Template-Object-Names. Have to begin with an /
+     */
+    public $tplPrefix = "/TPL";
+
+    /**
+     * Current Object Id.
+     *
+     * @var integer
+     */
+    protected $_currentObjId;
+
+    /**
+     * Return XObjects Dictionary.
+     *
+     * Overwritten to add additional XObjects to the resources dictionary of TCPDF
+     *
+     * @return string
+     */
+    protected function _getxobjectdict()
+    {
         $out = parent::_getxobjectdict();
-        if (count($this->tpls)) {
-            foreach($this->tpls as $tplidx => $tpl) {
-                $out .= sprintf('%s%d %d 0 R', $this->tplprefix, $tplidx, $tpl['n']);
-            }
+        foreach ($this->_tpls as $tplIdx => $tpl) {
+            $out .= sprintf('%s%d %d 0 R', $this->tplPrefix, $tplIdx, $tpl['n']);
         }
 
         return $out;
     }
 
     /**
-     * Encryption of imported data by FPDI
+     * Writes a PDF value to the resulting document.
+     *
+     * Prepares the value for encryption of imported data by FPDI
      *
      * @param array $value
      */
-    public function pdf_write_value(&$value) {
+    protected function _prepareValue(&$value)
+    {
         switch ($value[0]) {
-    		case PDF_TYPE_STRING:
-				if ($this->encrypted) {
-				    $value[1] = $this->_unescape($value[1]);
-                    $value[1] = $this->_encrypt_data($this->_current_obj_id, $value[1]);
-                 	$value[1] = \TCPDF_STATIC::_escape($value[1]);
+            case Parser::TYPE_STRING:
+                if ($this->encrypted) {
+                    $value[1] = $this->_unescape($value[1]);
+                    $value[1] = $this->_encrypt_data($this->_currentObjId, $value[1]);
+                    $value[1] = TCPDF_STATIC::_escape($value[1]);
                 }
-    			break;
+                break;
 
-			case PDF_TYPE_STREAM:
-			    if ($this->encrypted) {
-			        $value[2][1] = $this->_encrypt_data($this->_current_obj_id, $value[2][1]);
-			        $value[1][1]['/Length'] = array(
-                        PDF_TYPE_NUMERIC,
+            case Parser::TYPE_STREAM:
+                if ($this->encrypted) {
+                    $value[2][1] = $this->_encrypt_data($this->_currentObjId, $value[2][1]);
+                    $value[1][1]['/Length'] = array(
+                        Parser::TYPE_NUMERIC,
                         strlen($value[2][1])
                     );
                 }
                 break;
 
-            case PDF_TYPE_HEX:
-            	if ($this->encrypted) {
-                	$value[1] = $this->hex2str($value[1]);
-                	$value[1] = $this->_encrypt_data($this->_current_obj_id, $value[1]);
+            case Parser::TYPE_HEX:
+                if ($this->encrypted) {
+                    $value[1] = $this->hex2str($value[1]);
+                    $value[1] = $this->_encrypt_data($this->_currentObjId, $value[1]);
 
-                	// remake hexstring of encrypted string
-    				$value[1] = $this->str2hex($value[1]);
+                    // remake hexstring of encrypted string
+                    $value[1] = $this->str2hex($value[1]);
                 }
                 break;
-    	}
+        }
     }
 
     /**
-     * Unescapes a PDF string
+     * Un-escapes a PDF string
      *
      * @param string $s
      * @return string
      */
-    protected function _unescape($s) {
+    protected function _unescape($s)
+    {
         $out = '';
         for ($count = 0, $n = strlen($s); $count < $n; $count++) {
             if ($s[$count] != '\\' || $count == $n-1) {
@@ -146,11 +174,17 @@ class FPDF extends \TCPDF {
     /**
      * Hexadecimal to string
      *
-     * @param string $hex
+     * @param string $data
      * @return string
      */
-    protected function hex2str($hex) {
-    	return pack('H*', str_replace(array("\r", "\n", ' '), '', $hex));
+    public function hex2str($data)
+    {
+        $data = preg_replace('/[^0-9A-Fa-f]/', '', rtrim($data, '>'));
+        if ((strlen($data) % 2) == 1) {
+            $data .= '0';
+        }
+
+        return pack('H*', $data);
     }
 
     /**
@@ -159,7 +193,8 @@ class FPDF extends \TCPDF {
      * @param string $str
      * @return string
      */
-    protected function str2hex($str) {
+    public function str2hex($str)
+    {
         return current(unpack('H*', $str));
     }
 }
