@@ -8,7 +8,7 @@
         "tecnick.com/tcpdf": "6.*"
     },
     "autoload": {
-        "psr-0": {
+        "psr-4": {
             "fpdi": "src/"
         }
     }
