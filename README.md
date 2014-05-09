@@ -1,7 +1,7 @@
 fpdi
 ====
 
-Unofficial PSR-0 compliant version of the FPDI library for TCPDF
+Unofficial PSR-4 compliant version of the FPDI library for TCPDF
 
 
 
@@ -11,7 +11,7 @@ This is version [1.5.1 of FPDI](http://www.setasign.com/products/fpdi/downloads/
 
     $fpdi = new \fpdi\FPDI();
 
-* directory structure follow the PSR-0 standard with src/ as root
+* directory structure follow the PSR-4 standard with src/ as root
 
 * removed all "is_subclass_of($this, 'TCPDF')" as we support only TCPDF
 
