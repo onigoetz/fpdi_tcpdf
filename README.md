@@ -1,6 +1,9 @@
 fpdi
 ====
 
+> __Deprecated__
+> This package is deprecated in favor of the [official library](https://packagist.org/packages/setasign/fpdi-tcpdf) now available on packagist.
+
 Unofficial PSR-4 compliant version of the FPDI library for TCPDF
 
 
