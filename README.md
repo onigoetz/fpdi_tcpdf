@@ -1,11 +1,11 @@
 fpdi
 ====
 
-<div stlye="color:red">
-> __Deprecated__
+> ## Deprecated
 >
-> This package is deprecated in favor of the [official library](https://packagist.org/packages/setasign/fpdi-tcpdf) now available on packagist.
-</div>
+> __This package is deprecated in favor of the [official library](https://packagist.org/packages/setasign/fpdi-tcpdf) now available on packagist.__
+
+
 Unofficial PSR-4 compliant version of the FPDI library for TCPDF
 
 
